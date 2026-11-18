@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f4f2ed" />
+  <title>Studio Ledger — Project Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div id="login-screen" class="login-screen hidden">
+    <div class="login-card">
+      <div class="brand-mark">S<span>·</span>L</div>
+      <p class="eyebrow">STUDIO LEDGER</p>
+      <h1>Your work,<br>in good order.</h1>
+      <p class="login-copy">Sign in with the studio access password to manage projects.</p>
+      <form id="login-form">
+        <label for="password">Studio password</label>
+        <div class="password-field"><input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required><button type="button" id="toggle-password" aria-label="Show password">Show</button></div>
+        <button class="button button-dark button-full" type="submit">Open the studio <span>↗</span></button>
+        <p id="login-error" class="error-text" aria-live="polite"></p>
+      </form>
+      <p class="login-foot">Private workspace · Shared with your team</p>
+    </div>
+    <div class="login-art"><div class="art-circle"></div><div class="art-label">A CLEAR VIEW<br>OF WHAT'S NEXT</div><div class="art-wave">〰</div><span class="art-note">♪</span></div>
+  </div>
+
+  <div id="setup-screen" class="login-screen hidden">
+    <div class="login-card">
+      <div class="brand-mark">S<span>·</span>L</div>
+      <p class="eyebrow">STUDIO LEDGER</p>
+      <h1>Almost ready.</h1>
+      <p class="login-copy">This workspace is waiting for its secure shared database. Ask the owner to finish the Supabase setup, then reload this page.</p>
+      <p class="login-foot">NO PROJECT DATA IS STORED ON THIS PAGE YET</p>
+    </div>
+    <div class="login-art"><div class="art-circle"></div><div class="art-label">A CLEAR VIEW<br>OF WHAT'S NEXT</div><div class="art-wave">〰</div><span class="art-note">♪</span></div>
+  </div>
+
+  <div id="app" class="app-shell hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#overview"><span class="brand-mark">S<span>·</span>L</span><span class="brand-name">studio<br><b>ledger</b></span></a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav><a href="#overview" id="nav-overview" class="nav-item active"><span class="nav-icon">▦</span>Overview<span class="nav-count" id="nav-count">0</span></a></nav>
+      <div class="sidebar-bottom"><div class="sync-indicator"><span class="sync-dot"></span><span id="sync-label">Local preview</span></div><button id="signout-button" class="signout-button">↪ <span>Sign out</span></button><div class="sidebar-note">MADE FOR THE<br>MAKING OF THINGS.</div></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div class="breadcrumb"><span>STUDIO</span><span class="crumb-slash">/</span><span id="breadcrumb-current">OVERVIEW</span></div><div class="topbar-actions"><span class="today-label" id="today-label"></span><div class="avatar" title="Studio team">ST</div></div></header>
+      <section id="overview-view" class="view">
+        <div class="page-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h1>Project overview<span class="heading-period">.</span></h1><p class="subheading">A little clarity for everything in motion.</p></div><button id="new-project" class="button button-dark">＋ <span>New project</span></button></div>
+        <div class="stats-row"><article class="stat-card"><span class="stat-label">IN MOTION</span><strong id="stat-active">00</strong><span class="stat-foot"><i class="stat-dot dot-blue"></i>Projects underway</span></article><article class="stat-card"><span class="stat-label">UP NEXT</span><strong id="stat-upnext">00</strong><span class="stat-foot"><i class="stat-dot dot-orange"></i>Starting soon</span></article><article class="stat-card"><span class="stat-label">INVOICES OPEN</span><strong id="stat-invoices">00</strong><span class="stat-foot"><i class="stat-dot dot-green"></i>Awaiting payment</span></article><article class="stat-card stat-card-dark"><span class="stat-label">THIS MONTH</span><strong id="stat-month">00</strong><span class="stat-foot">Project deadlines</span><span class="stat-spark">⌁</span></article></div>
+        <div class="section-toolbar"><div><h2>All projects <span id="project-count" class="count-pill">0</span></h2><p class="section-caption">Everything your studio is working on.</p></div><div class="toolbar-controls"><label class="search-box"><span>⌕</span><input id="project-search" type="search" placeholder="Find a project" aria-label="Find a project"></label><label class="select-wrap"><span class="sr-only">Sort projects</span><select id="sort-select"><option value="deadline">Deadline · Soonest</option><option value="chronological">Recently updated</option><option value="name">Name · A to Z</option></select><span>⌄</span></label></div></div>
+        <div id="project-list" class="project-list"></div>
+        <div id="empty-state" class="empty-state hidden"><span class="empty-glyph">♫</span><h3>A fresh page.</h3><p>Add your first project and bring the details together here.</p><button class="button button-outline" id="empty-new-project">＋ Create a project</button></div>
+        <footer class="page-footer"><span>STUDIO LEDGER <span class="footer-dot">·</span> KEEP THE GOOD WORK MOVING</span><span id="footer-storage">Changes save automatically</span></footer>
+      </section>
+
+      <section id="project-view" class="view hidden">
+        <button id="back-to-overview" class="back-link">← All projects</button>
+        <div class="project-heading"><div><p class="eyebrow" id="project-category-eyebrow">PROJECT / CATEGORY</p><h1 id="detail-name">Project title<span class="heading-period">.</span></h1><p class="subheading" id="detail-subtitle"></p></div><div class="heading-buttons"><button class="button button-outline" id="edit-project">Edit details</button><button class="icon-button danger-button" id="delete-project" aria-label="Delete project" title="Delete project">⌫</button></div></div>
+        <div class="detail-layout"><div class="detail-main">
+          <article class="detail-panel"><div class="panel-header"><div><p class="eyebrow">PROJECT SNAPSHOT</p><h2>The essentials</h2></div><span id="detail-status" class="status-badge"></span></div><div class="snapshot-grid"><div class="snapshot-item"><span>DEADLINE</span><strong id="detail-deadline">—</strong><small id="detail-deadline-relative"></small></div><div class="snapshot-item"><span>BUDGET</span><strong id="detail-budget">—</strong><small>Project fee</small></div><div class="snapshot-item"><span>INVOICE</span><strong id="detail-invoice">—</strong><small>Payment status</small></div></div></article>
+          <article class="detail-panel tasks-panel"><div class="panel-header"><div><p class="eyebrow">THE RUN OF SHOW</p><h2>Tasks <span id="task-progress" class="progress-text"></span></h2></div><button id="add-task" class="button button-small button-outline">＋ Add task</button></div><div id="task-list" class="task-list"></div><form id="quick-task-form" class="quick-task hidden"><input id="quick-task-input" placeholder="What needs doing?" required><button class="button button-dark button-small">Add task</button></form></article>
+        </div><aside class="detail-aside"><article class="detail-panel people-panel"><div class="panel-header"><div><p class="eyebrow">THE PEOPLE</p><h2>Team</h2></div><button id="manage-team" class="text-button">Edit</button></div><div id="team-list" class="person-list"></div><div class="aside-divider"></div><div class="panel-header contact-header"><div><p class="eyebrow">GOOD TO KNOW</p><h2>Contacts</h2></div></div><div id="contact-list" class="contact-list"></div></article><div class="studio-note"><span>✳</span><p>Great work is a team effort.<br><em>Keep everyone in the loop.</em></p></div></aside></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="project-dialog" class="modal"><form id="project-form" method="dialog"><div class="modal-heading"><div><p class="eyebrow">PROJECT DETAILS</p><h2 id="project-form-title">A new beginning.</h2></div><button type="button" class="close-button" data-close="project-dialog" aria-label="Close">×</button></div><input type="hidden" id="project-id"><div class="form-grid"><label class="field field-wide">Project name<input id="form-name" required placeholder="e.g. The North Star — Original Score"></label><label class="field">Category<input id="form-category" placeholder="Film score, album, sync…"></label><label class="field">Status<select id="form-status"><option>In progress</option><option>Starting soon</option><option>On hold</option><option>Complete</option></select></label><label class="field">Deadline<input id="form-deadline" type="date"></label><label class="field">Budget<input id="form-budget" type="number" min="0" step="0.01" placeholder="0"></label><label class="field">Invoice status<select id="form-invoice"><option>Not invoiced</option><option>Invoiced</option><option>Part-paid</option><option>Paid</option></select></label><label class="field field-wide">Team members <span class="field-hint">Select from your studio list; add people using “Manage team”.</span><select id="form-team" multiple size="4"></select></label><label class="field field-wide">Important contacts <span class="field-hint">One per line: name, role, email or phone.</span><textarea id="form-contacts" rows="3" placeholder="Jamie Lee, Director, jamie@example.com"></textarea></label></div><div class="modal-actions"><button type="button" class="button button-text" data-close="project-dialog">Cancel</button><button class="button button-dark" type="submit">Save project <span>↗</span></button></div></form></dialog>
+
+  <dialog id="team-dialog" class="modal modal-small"><form id="team-form" method="dialog"><div class="modal-heading"><div><p class="eyebrow">YOUR STUDIO ROSTER</p><h2>Good people.</h2></div><button type="button" class="close-button" data-close="team-dialog" aria-label="Close">×</button></div><p class="modal-intro">Keep a shared list of your regular collaborators.</p><div class="add-person-row"><input id="new-member-name" placeholder="Team member name" required><button class="button button-dark button-small">Add</button></div><div id="roster-list" class="roster-list"></div><div class="modal-actions"><button type="button" class="button button-dark" data-close="team-dialog">Done</button></div></form></dialog>
+  </div>
+</body>
+</html>
