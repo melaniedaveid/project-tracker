@@ -1,0 +1,48 @@
+name: Deploy Project Tracker to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Create public app config
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SHARED_LOGIN_EMAIL: ${{ secrets.SHARED_LOGIN_EMAIL }}
+        run: |
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_ANON_KEY" ] && [ -n "$SHARED_LOGIN_EMAIL" ]; then
+            cat > config.js <<EOF
+          window.STUDIO_CONFIG = {
+            deployed: true,
+            supabaseUrl: "$SUPABASE_URL",
+            supabaseAnonKey: "$SUPABASE_ANON_KEY",
+            sharedLoginEmail: "$SHARED_LOGIN_EMAIL"
+          };
+          EOF
+          else
+            echo 'window.STUDIO_CONFIG = { deployed: true };' > config.js
+          fi
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
